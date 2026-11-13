@@ -89,16 +89,7 @@
     <hr class="settings-divider">
     <h2>鸡肋OS 更新</h2>
     <p id="update-version"></p>
-    <form id="update-form">
-      <label>更新清单地址
-        <input id="update-url" type="url" placeholder="https://example.org/v5/release.json" maxlength="500">
-      </label>
-      <label class="motion-toggle"><input id="update-auto" type="checkbox"> 连接 Wi-Fi 时自动安装新版</label>
-      <div class="toolbar">
-        <button id="update-save" disabled>保存更新设置</button>
-        <button id="update-check" type="button" class="secondary" disabled>立即检查更新</button>
-      </div>
-    </form>
+    <button id="update-check" type="button" class="secondary" disabled>检查并更新</button>
     <p class="form-help">更新期间鸡肋OS会短暂重启，家长网页可能需要重新登录。</p>
     <p id="update-status" role="status"></p>
   </section>

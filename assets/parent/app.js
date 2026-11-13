@@ -382,35 +382,21 @@ byId('password').addEventListener('submit', async event => {
     }
   } catch (error) { byId('password-status').textContent = error.message; }
 });
-function showUpdate(state, fillForm) {
+function showUpdate(state) {
   byId('update-version').textContent = '当前版本 ' + state.version;
   byId('update-status').textContent = state.available ? state.message : '请先启用设备管理。';
-  if (fillForm) {
-    byId('update-url').value = state.url;
-    byId('update-auto').checked = state.automatic;
-  }
-  byId('update-save').disabled = !state.available;
-  byId('update-check').disabled = !state.available || !state.url;
+  byId('update-check').disabled = !state.available;
 }
-async function refreshUpdate(fillForm) {
-  try { showUpdate(await json('/api/update'), fillForm); }
+async function refreshUpdate() {
+  try { showUpdate(await json('/api/update')); }
   catch (error) { byId('update-status').textContent = error.message; }
 }
-byId('update-form').addEventListener('submit', async event => {
-  event.preventDefault();
-  try {
-    showUpdate(await update('/api/update', {
-      url: byId('update-url').value.trim(),
-      automatic: byId('update-auto').checked
-    }), true);
-  } catch (error) { byId('update-status').textContent = error.message; }
-});
 byId('update-check').addEventListener('click', async () => {
-  try { showUpdate(await update('/api/update', {check:true}), false); }
+  try { showUpdate(await update('/api/update', {check:true})); }
   catch (error) { byId('update-status').textContent = error.message; }
 });
 setInterval(() => {
-  if (panelHash() === '#settings' && !document.hidden) refreshUpdate(false);
+  if (panelHash() === '#settings' && !document.hidden) refreshUpdate();
 }, 5000);
 (async () => {
   try {
@@ -425,7 +411,7 @@ setInterval(() => {
         catch (error) { byId('desktop-status').textContent = error.message; }
       }
       if (panel === '#usage') await refreshUsage();
-      if (panel === '#settings') await refreshUpdate(true);
+      if (panel === '#settings') await refreshUpdate();
       return;
     }
     await refreshStatus();
@@ -433,7 +419,7 @@ setInterval(() => {
       json('/api/apps').then(showApps).catch(error => { byId('apps-status').textContent = error.message; }),
       json('/api/sites').then(showSites).catch(error => { byId('site-status').textContent = error.message; }),
       json('/api/desktop').then(showDesktop).catch(error => { byId('desktop-status').textContent = error.message; }),
-      refreshUpdate(true),
+      refreshUpdate(),
       refreshUsage()
     ]);
   } catch (error) { byId('status').textContent = error.message; }

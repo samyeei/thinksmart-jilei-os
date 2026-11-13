@@ -47,7 +47,7 @@ public final class FamilyService extends Service implements ParentHttpServer.Bac
         extras = new FamilyExtras(this);
         pin = new ParentPin(getSharedPreferences("family", MODE_PRIVATE));
         ota = new OtaUpdate(this);
-        ota.schedulePeriodic();
+        ota.cancelLegacyAutomaticUpdates();
         server = new ParentHttpServer(this, this);
         try {
             server.start();

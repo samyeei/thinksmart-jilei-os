@@ -33,7 +33,8 @@ import javax.net.ssl.HttpsURLConnection;
 final class OtaUpdate {
     static final String RESULT = "local.jile.v5.OTA_RESULT";
     private static final int MANUAL = 87660;
-    static final int PERIODIC = 87661;
+    private static final int LEGACY_PERIODIC = 87661;
+    private static final String FEED = "https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json";
     private static final long MAX_APK = 160L * 1024 * 1024;
     private static final Object LOCK = new Object();
     private static final AtomicBoolean CHECKING = new AtomicBoolean();
@@ -55,8 +56,6 @@ final class OtaUpdate {
             reconcile(current.versionCode);
             return new JSONObject().put("version", current.versionName)
                     .put("versionCode", current.versionCode)
-                    .put("url", prefs.getString("url", ""))
-                    .put("automatic", prefs.getBoolean("automatic", false))
                     .put("available", new KioskPolicy(context).available())
                     .put("message", prefs.getString("message", "尚未检查更新"));
         }
@@ -67,66 +66,46 @@ final class OtaUpdate {
             if (!new KioskPolicy(context).available()) throw new IllegalArgumentException("设备未启用设备管理");
             reconcile(installed().versionCode);
             if (prefs.getInt("target", 0) != 0) throw new IllegalArgumentException("正在安装更新，请稍等");
-            if (data.optBoolean("check", false)) {
-                if (prefs.getString("url", "").isEmpty()) throw new IllegalArgumentException("请先保存更新地址");
-                JobInfo job = new JobInfo.Builder(MANUAL, component()).setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                        .setOverrideDeadline(TimeUnit.SECONDS.toMillis(5)).build();
-                if (jobs().schedule(job) != JobScheduler.RESULT_SUCCESS) throw new IOException("Cannot schedule update");
-                message("已安排检查，请稍候");
-                return;
+            if (!data.optBoolean("check", false) || data.length() != 1) {
+                throw new IllegalArgumentException("仅支持手动检查更新");
             }
-            if (!(data.opt("url") instanceof String) || !(data.opt("automatic") instanceof Boolean)) {
-                throw new IllegalArgumentException("更新设置格式错误");
-            }
-            String url = data.getString("url").trim();
-            boolean auto = data.getBoolean("automatic");
-            if (!url.isEmpty()) OtaChannel.feed(url);
-            if (auto && url.isEmpty()) throw new IllegalArgumentException("请先填写更新地址");
-            if (!prefs.edit().putString("url", url).putBoolean("automatic", auto)
-                    .putString("message", url.isEmpty() ? "尚未设置更新地址" : "更新设置已保存").commit()) {
-                throw new IOException("Cannot save update settings");
-            }
-            schedulePeriodic();
+            if (CHECKING.get() || jobs().getPendingJob(MANUAL) != null) return;
+            JobInfo job = new JobInfo.Builder(MANUAL, component())
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setOverrideDeadline(TimeUnit.SECONDS.toMillis(5)).build();
+            if (jobs().schedule(job) != JobScheduler.RESULT_SUCCESS) throw new IOException("Cannot schedule update");
+            message("已安排检查，请稍候");
         }
     }
 
-    void schedulePeriodic() {
+    void cancelLegacyAutomaticUpdates() {
         synchronized (LOCK) {
-            JobScheduler scheduler = jobs();
-            if (!prefs.getBoolean("automatic", false) || prefs.getString("url", "").isEmpty()
-                    || !new KioskPolicy(context).available()) {
-                scheduler.cancel(PERIODIC);
-            } else if (scheduler.getPendingJob(PERIODIC) == null) {
-                scheduler.schedule(new JobInfo.Builder(PERIODIC, component())
-                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
-                        .setPeriodic(TimeUnit.HOURS.toMillis(6)).setPersisted(true).build());
-            }
+            jobs().cancel(LEGACY_PERIODIC);
+            prefs.edit().remove("url").remove("automatic").apply();
         }
     }
 
     private JobScheduler jobs() { return context.getSystemService(JobScheduler.class); }
     private ComponentName component() { return new ComponentName(context, OtaJob.class); }
 
-    boolean check(boolean periodic) {
+    boolean check(int jobId) {
+        if (jobId != MANUAL) return true;
         if (!CHECKING.compareAndSet(false, true)) return false;
-        String url = "";
         try {
             synchronized (LOCK) {
-                url = prefs.getString("url", "");
-                if (url.isEmpty() || !new KioskPolicy(context).available()
-                        || (periodic && !prefs.getBoolean("automatic", false))) return true;
+                if (!new KioskPolicy(context).available()) return true;
                 reconcile(installed().versionCode);
                 if (prefs.getInt("target", 0) != 0) return true;
                 message("正在检查更新");
             }
-            URI feed = OtaChannel.feed(url);
+            URI feed = OtaChannel.feed(FEED);
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             transfer(feed, bytes, 16384, -1, null);
             JSONObject release = new JSONObject(new String(bytes.toByteArray(), StandardCharsets.UTF_8));
             int version = release.getInt("versionCode");
             PackageInfo current = installed();
             if (version <= current.versionCode) {
-                if (sameUrl(url)) message("已是最新版本");
+                message("已是最新版本");
                 return true;
             }
             long length = release.getLong("size");
@@ -137,7 +116,7 @@ final class OtaUpdate {
             URI apk = OtaChannel.apk(feed, release.getString("apk"));
             File file = new File(context.getCacheDir(), "ota-download.apk");
             try {
-                if (sameUrl(url)) message("正在下载版本 " + version);
+                message("正在下载版本 " + version);
                 MessageDigest sha = MessageDigest.getInstance("SHA-256");
                 try (OutputStream out = new FileOutputStream(file)) {
                     transfer(apk, out, MAX_APK, length, sha);
@@ -151,16 +130,15 @@ final class OtaUpdate {
                     throw new IllegalArgumentException("APK 的应用名称、版本或签名不匹配，已取消更新");
                 }
                 synchronized (LOCK) {
-                    if (!sameUrl(url) || Thread.currentThread().isInterrupted()
-                            || (periodic && !prefs.getBoolean("automatic", false))
+                    if (Thread.currentThread().isInterrupted()
                             || !new KioskPolicy(context).available() || version <= installed().versionCode) return true;
                     install(file, version);
                 }
             } finally { file.delete(); }
         } catch (IllegalArgumentException rejected) {
-            if (sameUrl(url)) message(rejected.getMessage());
+            message(rejected.getMessage());
         } catch (Exception unavailable) {
-            if (sameUrl(url)) message("更新未完成，请检查网络、存储空间或更新包后重试");
+            message("更新未完成，请检查网络、存储空间或更新包后重试");
         } finally { CHECKING.set(false); }
         return true;
     }
@@ -277,7 +255,6 @@ final class OtaUpdate {
         edit.commit();
     }
 
-    private boolean sameUrl(String url) { return url.equals(prefs.getString("url", "")); }
     private void message(String value) { prefs.edit().putString("message", value).apply(); }
 
     private static String hex(byte[] bytes) {

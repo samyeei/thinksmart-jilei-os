@@ -9,7 +9,7 @@ public final class OtaJob extends JobService {
 
     @Override public boolean onStartJob(JobParameters params) {
         Thread task = new Thread(() -> {
-            boolean complete = new OtaUpdate(this).check(params.getJobId() == OtaUpdate.PERIODIC);
+            boolean complete = new OtaUpdate(this).check(params.getJobId());
             if (tasks.remove(params, Thread.currentThread())) jobFinished(params, !complete);
         }, "jile-update");
         tasks.put(params, task);
@@ -20,6 +20,6 @@ public final class OtaJob extends JobService {
     @Override public boolean onStopJob(JobParameters params) {
         Thread task = tasks.remove(params);
         if (task != null) task.interrupt();
-        return true;
+        return false;
     }
 }

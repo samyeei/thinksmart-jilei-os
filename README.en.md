@@ -14,6 +14,6 @@ Copyright © 2026 Samyeei. Project source is available under the [PolyForm Nonco
 
 ## OTA updates
 
-With device management enabled, set an HTTPS manifest URL in parent settings and enable automatic checks. Run `python3 scripts/prepare_ota.py <apk> <output-directory>` and host the manifest and APK in the same HTTPS directory. The current client requires direct HTTP 200 responses. Updates require the same signing key and a higher versionCode.
+With device management enabled, choose Check and update in Parent Settings on the device or in the web dashboard. The app checks the built-in GitHub feed only when requested by a parent. Run `python3 scripts/prepare_ota.py <apk> <output-directory>` and host the manifest and APK in the same HTTPS directory. The current client requires direct HTTP 200 responses. Updates require the same signing key and a higher versionCode.
 
 [V5 GitHub update manifest](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
