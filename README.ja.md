@@ -22,7 +22,7 @@ https://github.com/user-attachments/assets/b50a9013-09a9-40ed-bffd-b0f5892f4d65
 
 ## インストール
 
-[GitHub Releases](https://github.com/samyeei/thinksmart-view-jile-os-v5/releases/latest)
+[GitHub Releases](https://github.com/samyeei/thinksmart-jilei-os/releases/latest)
 
 1. 対応する Android 8.1 ファームウェア（API 27、ARMv7）が動作する Lenovo ThinkSmart View V5 を使用します。復旧用の資料を確保し、USB デバッグを有効にして `adb devices -l` で対象を確認します。
 2. GitHub Releases から `jile-os-v5.apk` を取得し、`adb -s <シリアル番号> install -t jile-os-v5.apk` を実行します。同じ署名の APK で上書きする場合は `-r` を追加します。
@@ -31,14 +31,14 @@ https://github.com/user-attachments/assets/b50a9013-09a9-40ed-bffd-b0f5892f4d65
 
 ## AI エージェントに渡す指示
 
-> このリポジトリの手順に従って、USB 接続した ThinkSmart View に Jile OS V5 を導入してください。機種、ファームウェア、ABI、ADB のシリアル番号、既存アプリの署名を確認し、対象が一致したら GitHub Releases の APK を既存データを残してインストールしてください。互換性や署名が不明な場合、または書き換えや初期化が必要な場合は中断して理由を説明し、最後に本体で初期コード 123456 を入力して保護者 PIN を設定するよう案内してください。 https://github.com/samyeei/thinksmart-view-jile-os-v5
+> このリポジトリの手順に従って、USB 接続した ThinkSmart View に Jile OS V5 を導入してください。機種、ファームウェア、ABI、ADB のシリアル番号、既存アプリの署名を確認し、対象が一致したら GitHub Releases の APK を既存データを残してインストールしてください。互換性や署名が不明な場合、または書き換えや初期化が必要な場合は中断して理由を説明し、最後に本体で初期コード 123456 を入力して保護者 PIN を設定するよう案内してください。 https://github.com/samyeei/thinksmart-jilei-os
 
 ## ソースからビルド
 
 JDK 17、Gradle 9.8.2、Android SDK 37.2、Build Tools 36.0.0 を用意します。`JAVA_HOME` と `ANDROID_HOME` を設定して `python3 build.py` を実行すると、ローカルのテスト鍵で署名した `dist/jile-os-v5.apk` が生成されます。Gradle の場所は `JILE_GRADLE` で指定できます。
 
 
-`python3 scripts/prepare_ota.py <apk> <output-directory>` → `release.json` + APK. [OTA](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
+`python3 scripts/prepare_ota.py <apk> <output-directory>` → `release.json` + APK. [OTA](https://raw.githubusercontent.com/samyeei/thinksmart-jilei-os/refs/heads/ota/release.json)
 
 ## ライセンス
 

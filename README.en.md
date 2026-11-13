@@ -22,7 +22,7 @@ The built-in learning browser ships with the APK. ChatGPT, music apps, Google Pl
 
 ## Quick start
 
-[GitHub Releases](https://github.com/samyeei/thinksmart-view-jile-os-v5/releases/latest)
+[GitHub Releases](https://github.com/samyeei/thinksmart-jilei-os/releases/latest)
 
 1. Use a Lenovo ThinkSmart View V5 with compatible Android 8.1 firmware (API 27, ARMv7). Keep recovery materials, enable USB debugging, and confirm the target with `adb devices -l`.
 2. Download `jile-os-v5.apk` from GitHub Releases. Run `adb -s <serial> install -t jile-os-v5.apk`. Add `-r` for updates signed with the same key.
@@ -31,14 +31,14 @@ The built-in learning browser ships with the APK. ChatGPT, music apps, Google Pl
 
 ## Copy and paste into your AI agent
 
-> Follow this repository to install Jile OS V5 on my USB-connected ThinkSmart View. Verify the model, firmware, ABI, ADB serial, and any existing signing certificate, then download and install the GitHub Release APK on the matching device while keeping existing data. Stop and explain if compatibility or signing is unclear or if flashing or wiping is required. Ask me to enter setup code 123456 and choose my own parent PIN on the device. https://github.com/samyeei/thinksmart-view-jile-os-v5
+> Follow this repository to install Jile OS V5 on my USB-connected ThinkSmart View. Verify the model, firmware, ABI, ADB serial, and any existing signing certificate, then download and install the GitHub Release APK on the matching device while keeping existing data. Stop and explain if compatibility or signing is unclear or if flashing or wiping is required. Ask me to enter setup code 123456 and choose my own parent PIN on the device. https://github.com/samyeei/thinksmart-jilei-os
 
 ## Build from source
 
 Install JDK 17, Gradle 9.8.2, Android SDK 37.2, and Build Tools 36.0.0. Set `JAVA_HOME` and `ANDROID_HOME` and run `python3 build.py`. The output is `dist/jile-os-v5.apk` signed with the local test key. Set `JILE_GRADLE` if Gradle is outside PATH.
 
 
-`python3 scripts/prepare_ota.py <apk> <output-directory>` → `release.json` + APK. [OTA](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
+`python3 scripts/prepare_ota.py <apk> <output-directory>` → `release.json` + APK. [OTA](https://raw.githubusercontent.com/samyeei/thinksmart-jilei-os/refs/heads/ota/release.json)
 
 ## License
 

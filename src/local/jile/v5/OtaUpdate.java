@@ -34,7 +34,7 @@ final class OtaUpdate {
     static final String RESULT = "local.jile.v5.OTA_RESULT";
     private static final int MANUAL = 87660;
     private static final int LEGACY_PERIODIC = 87661;
-    private static final String FEED = "https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json";
+    private static final String FEED = "https://raw.githubusercontent.com/samyeei/thinksmart-jilei-os/refs/heads/ota/release.json";
     private static final long MAX_APK = 160L * 1024 * 1024;
     private static final Object LOCK = new Object();
     private static final AtomicBoolean CHECKING = new AtomicBoolean();

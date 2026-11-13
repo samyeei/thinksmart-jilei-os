@@ -22,7 +22,7 @@ https://github.com/user-attachments/assets/b50a9013-09a9-40ed-bffd-b0f5892f4d65
 
 ## 快速安装
 
-[GitHub Releases](https://github.com/samyeei/thinksmart-view-jile-os-v5/releases/latest)
+[GitHub Releases](https://github.com/samyeei/thinksmart-jilei-os/releases/latest)
 
 1. 准备运行兼容 Android 8.1（API 27、ARMv7）固件的 Lenovo ThinkSmart View V5，保留恢复资料。开启 USB 调试，用 `adb devices -l` 核对目标设备。
 2. 从 GitHub Releases 下载 `jile-os-v5.apk`，运行 `adb -s <序列号> install -t jile-os-v5.apk`。同签名覆盖升级时加 `-r`。
@@ -31,14 +31,14 @@ https://github.com/user-attachments/assets/b50a9013-09a9-40ed-bffd-b0f5892f4d65
 
 ## 复制给 AI
 
-> 请按这个仓库的说明把鸡肋OS V5 安装到我通过 USB 接入的 ThinkSmart View：先核对机型、固件、ABI、ADB 序列号及现有签名，再下载 GitHub Release APK 并安装到明确匹配的设备，保留原有数据；遇到机型不明、签名不符或需要刷机、清数据时停下说明，最后提示我在设备上用初始码 123456 设置自己的家长 PIN。 https://github.com/samyeei/thinksmart-view-jile-os-v5
+> 请按这个仓库的说明把鸡肋OS V5 安装到我通过 USB 接入的 ThinkSmart View：先核对机型、固件、ABI、ADB 序列号及现有签名，再下载 GitHub Release APK 并安装到明确匹配的设备，保留原有数据；遇到机型不明、签名不符或需要刷机、清数据时停下说明，最后提示我在设备上用初始码 123456 设置自己的家长 PIN。 https://github.com/samyeei/thinksmart-jilei-os
 
 ## 自行构建
 
 准备 JDK 17、Gradle 9.8.2、Android SDK 37.2 和 Build Tools 36.0.0，设置 `JAVA_HOME` 与 `ANDROID_HOME`，运行 `python3 build.py`。产物位于 `dist/jile-os-v5.apk`，使用本地构建机的测试签名。可用 `JILE_GRADLE` 指定 Gradle 路径。
 
 
-`python3 scripts/prepare_ota.py <apk> <output-directory>` → `release.json` + APK. [OTA](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
+`python3 scripts/prepare_ota.py <apk> <output-directory>` → `release.json` + APK. [OTA](https://raw.githubusercontent.com/samyeei/thinksmart-jilei-os/refs/heads/ota/release.json)
 
 ## 许可
 
