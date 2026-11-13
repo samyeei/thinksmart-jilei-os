@@ -11,3 +11,7 @@ Verify the device and recovery materials before using `adb -s <serial> install -
 The parent web interface uses HTTP on a trusted home network. Screen capture requires the user's awareness and system authorization. The user supplies compatible firmware, Google Play services, and other apps. The package excludes private device data, third-party APKs, the third-party learning graph, and the legacy website compatibility bundle.
 
 Copyright © 2026 Samyeei. Project source is available under the [PolyForm Noncommercial 1.0.0](LICENSE) license for permitted noncommercial uses. Third-party dependencies retain their own licenses.
+
+## OTA updates
+
+With device management enabled, set an HTTPS manifest URL in parent settings and enable automatic checks. Run `python3 scripts/prepare_ota.py <apk> <output-directory>` and host the manifest and APK in the same HTTPS directory. The current client requires direct HTTP 200 responses. Updates require the same signing key and a higher versionCode.

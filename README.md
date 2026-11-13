@@ -19,3 +19,7 @@
 包内提供桌面源码和构建材料。兼容固件、Google Play 服务及其他应用由使用者自行准备。个人资料、实际设备配置、第三方应用 APK 和第三方学习图谱均排除在发布范围外。本站的旧 WebView 兼容脚本也未纳入源码包，站点渲染取决于设备 WebView。
 
 © 2026 Samyeei。项目源码按 [PolyForm Noncommercial 1.0.0](LICENSE) 公开，限该许可规定的非商业用途。第三方依赖适用各自的许可证。
+
+## OTA 更新
+
+在设备启用设备管理后，可在家长设置里填写 HTTPS 更新清单并开启自动检查。运行 `python3 scripts/prepare_ota.py <apk> <输出目录>` 生成 `release.json` 和 APK。将两份文件放在同一 HTTPS 目录。当前客户端要求直接返回 HTTP 200。更新包须使用相同的应用签名及更高的 versionCode。
