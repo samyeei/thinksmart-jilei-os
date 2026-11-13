@@ -792,7 +792,7 @@ public final class MainActivity extends Activity {
         if (!parent) return;
         parentAuxRequest = REQUEST_AUTHOR_SITE;
         try {
-            Intent site = new Intent(this, SiteActivity.class).putExtra("parentSite", true);
+            Intent site = new Intent(this, ApprovedSiteActivity.class).putExtra("parentSite", true);
             startActivityForResult(site, REQUEST_AUTHOR_SITE);
         } catch (RuntimeException unavailable) {
             parentAuxRequest = 0;

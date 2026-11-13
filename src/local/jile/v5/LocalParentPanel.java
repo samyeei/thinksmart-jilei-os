@@ -31,14 +31,9 @@ final class LocalParentPanel extends WebView {
         getSettings().setAllowFileAccessFromFileURLs(false);
         getSettings().setAllowUniversalAccessFromFileURLs(false);
         getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW);
-        addJavascriptInterface(new Bridge(leaveParent), "V5LocalParent");
+        addJavascriptInterface(new Bridge(leaveParent, "about".equals(panel) ? openAuthorSite : null), "V5LocalParent");
         setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (active && request.isForMainFrame() && request.hasGesture()
-                        && "about".equals(panel)
-                        && "https://lab.samyeei.com/".equals(request.getUrl().toString())) {
-                    openAuthorSite.run();
-                }
                 return true;
             }
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
@@ -89,7 +84,18 @@ final class LocalParentPanel extends WebView {
 
     private final class Bridge {
         private final Runnable leaveParent;
-        Bridge(Runnable leaveParent) { this.leaveParent = leaveParent; }
+        private final Runnable openAuthorSite;
+
+        Bridge(Runnable leaveParent, Runnable openAuthorSite) {
+            this.leaveParent = leaveParent;
+            this.openAuthorSite = openAuthorSite;
+        }
+
+        @JavascriptInterface public void openAuthorSite() {
+            if (active && openAuthorSite != null) {
+                post(() -> { if (active) openAuthorSite.run(); });
+            }
+        }
 
         @JavascriptInterface public String read(String path) {
             FamilyService service = FamilyService.running;

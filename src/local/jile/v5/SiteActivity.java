@@ -32,6 +32,7 @@ public final class SiteActivity extends Activity {
         page.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         // Keep pages read-only: scripts could otherwise create requests outside WebView's HTTP callbacks.
         page.getSettings().setJavaScriptEnabled(parentSite);
+        page.getSettings().setDomStorageEnabled(parentSite);
         ServiceWorkerController.getInstance().setServiceWorkerClient(new ServiceWorkerClient() {
             @Override public WebResourceResponse shouldInterceptRequest(WebResourceRequest request) { return denied(); }
         });

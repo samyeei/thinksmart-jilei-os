@@ -382,6 +382,12 @@ byId('password').addEventListener('submit', async event => {
     }
   } catch (error) { byId('password-status').textContent = error.message; }
 });
+if (localParent) {
+  byId('author-site').addEventListener('click', event => {
+    event.preventDefault();
+    localParent.openAuthorSite();
+  });
+}
 function showUpdate(state) {
   byId('update-version').textContent = '当前版本 ' + state.version;
   byId('update-status').textContent = state.available ? state.message : '请先启用设备管理。';

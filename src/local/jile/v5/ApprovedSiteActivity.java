@@ -55,6 +55,7 @@ public final class ApprovedSiteActivity extends Activity {
     private GeckoSession.PermissionDelegate.Callback androidPermission;
     private boolean mediaGranted;
     private String openedSiteConfig;
+    private boolean parentSite;
     private static final int MEDIA_PERMISSIONS = 64;
 
     private final SharedPreferences.OnSharedPreferenceChangeListener approvalChanged =
@@ -69,15 +70,18 @@ public final class ApprovedSiteActivity extends Activity {
         extras = new FamilyExtras(this);
         logins = new SiteLoginStore(this);
         images = new SiteImageChooser(this, this::sitePermission);
-        entry = getIntent().getStringExtra("url");
+        parentSite = getIntent().getBooleanExtra("parentSite", false);
+        entry = parentSite ? FamilyExtras.AUTHOR : getIntent().getStringExtra("url");
         origin = FamilyExtras.origin(entry);
         if (!approved()) {
             finish();
             return;
         }
-        openedSiteConfig = extras.site(entry).toString();
-        preferences = getSharedPreferences("family", MODE_PRIVATE);
-        preferences.registerOnSharedPreferenceChangeListener(approvalChanged);
+        if (!parentSite) {
+            openedSiteConfig = extras.site(entry).toString();
+            preferences = getSharedPreferences("family", MODE_PRIVATE);
+            preferences.registerOnSharedPreferenceChangeListener(approvalChanged);
+        }
         notice = new TextView(this);
         notice.setGravity(Gravity.CENTER);
         notice.setTextSize(16);
@@ -136,10 +140,11 @@ public final class ApprovedSiteActivity extends Activity {
     }
 
     private boolean approved() {
-        return entry != null && !origin.isEmpty() && extras.site(entry) != null;
+        return entry != null && !origin.isEmpty() && (parentSite || extras.site(entry) != null);
     }
 
     private boolean allows(String url) {
+        if (parentSite) return origin.equals(FamilyExtras.origin(url));
         JSONObject site = entry == null ? null : extras.site(entry);
         if (site == null || origin.isEmpty()) return false;
         String candidate = FamilyExtras.origin(url);
@@ -179,6 +184,7 @@ public final class ApprovedSiteActivity extends Activity {
     }
 
     private boolean sitePermission(String name) {
+        if (parentSite) return false;
         JSONObject site = extras.site(entry);
         JSONObject rules = site == null ? null : site.optJSONObject("permissions");
         return !isFinishing() && origin.startsWith("https://") && origin.equals(FamilyExtras.origin(currentUrl))
@@ -238,7 +244,7 @@ public final class ApprovedSiteActivity extends Activity {
     }
 
     private String loginOrigin() {
-        return active == this && allows(currentUrl) ? SiteLoginStore.origin(currentUrl) : null;
+        return !parentSite && active == this && allows(currentUrl) ? SiteLoginStore.origin(currentUrl) : null;
     }
 
     private void sendSavedLogin() {
