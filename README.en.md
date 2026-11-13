@@ -8,7 +8,7 @@ Turn an idle Lenovo ThinkSmart View into a learning and music station. Children 
 
 <img src="docs/media/desktop.jpg" alt="Child home screen" width="200"> <img src="docs/media/voice.jpg" alt="ChatGPT voice" width="200"> <img src="docs/media/parent.jpg" alt="Parent dashboard" width="200">
 
-[Watch the full demo (1:39)](https://x.com/SamyeeiYu/status/2120146457353454033)
+[Watch the full demo on GitHub (1:39)](docs/media/thinksmart-v5-demo.mp4) · [Original X post](https://x.com/SamyeeiYu/status/2120146457353454033)
 
 ## Features
 

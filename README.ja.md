@@ -8,7 +8,7 @@
 
 <img src="docs/media/desktop.jpg" alt="子ども用ホーム" width="200"> <img src="docs/media/voice.jpg" alt="ChatGPT 音声会話" width="200"> <img src="docs/media/parent.jpg" alt="保護者画面" width="200">
 
-[動画を見る（1分39秒）](https://x.com/SamyeeiYu/status/2120146457353454033)
+[GitHubで動画を見る（1分39秒）](docs/media/thinksmart-v5-demo.mp4) · [Xの元の投稿](https://x.com/SamyeeiYu/status/2120146457353454033)
 
 ## 主な機能
 

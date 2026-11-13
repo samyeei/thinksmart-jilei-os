@@ -8,7 +8,7 @@
 
 <img src="docs/media/desktop.jpg" alt="儿童桌面" width="200"> <img src="docs/media/voice.jpg" alt="ChatGPT 语音" width="200"> <img src="docs/media/parent.jpg" alt="家长端" width="200">
 
-[观看完整视频（1 分 39 秒）](https://x.com/SamyeeiYu/status/2120146457353454033)
+[在 GitHub 观看完整视频（1 分 39 秒）](docs/media/thinksmart-v5-demo.mp4) · [X 原帖](https://x.com/SamyeeiYu/status/2120146457353454033)
 
 ## 主要功能
 
