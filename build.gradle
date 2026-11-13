@@ -1,0 +1,28 @@
+plugins { id 'com.android.application' version '9.4.1' }
+
+android {
+    namespace 'local.jile.v5'
+    compileSdk { version = release(37) { minorApiLevel = 2 } }
+    defaultConfig {
+        applicationId 'local.jile.v5'
+        minSdk 27
+        targetSdk 27
+        versionCode 29
+        versionName '0.4.22-v5'
+        ndk { abiFilters 'armeabi-v7a' }
+    }
+    sourceSets.main {
+        manifest.srcFile 'AndroidManifest.xml'
+        java.srcDirs = ['src']
+        res.srcDirs = [providers.gradleProperty('jileResources').get()]
+        assets.srcDirs = [providers.gradleProperty('jileAssets').get()]
+    }
+    lint { disable 'ExpiredTargetSdkVersion' }
+    packaging { jniLibs { useLegacyPackaging = true } }
+    buildTypes { release { signingConfig signingConfigs.debug } }
+}
+
+dependencies {
+    implementation 'androidx.core:core:1.19.1'
+    implementation 'org.mozilla.geckoview:geckoview:159.0.20261022150525'
+}

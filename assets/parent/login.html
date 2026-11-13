@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>鸡肋OS · 家长登录</title>
+  <link rel="icon" href="/brand.png">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="login-card">
+  <img class="login-brand" src="/brand.png" alt="" width="76" height="76">
+  <h1>鸡肋OS · 家长端</h1>
+  <p>在家庭 Wi-Fi 上管理这台设备。</p>
+  <form method="post" action="/login">
+    <label for="pin">六位家长 PIN</label>
+    <input id="pin" type="password" name="password" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="current-password" required>
+    <button type="submit">登录</button>
+  </form>
+</main>
+</body>
+</html>

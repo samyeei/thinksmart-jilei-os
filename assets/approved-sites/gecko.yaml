@@ -1,0 +1,8 @@
+prefs:
+  media.peerconnection.enabled: false
+  network.webtransport.enabled: false
+  dom.serviceWorkers.enabled: false
+  network.dns.disablePrefetch: true
+  network.predictor.enabled: false
+  network.prefetch-next: false
+  network.http.speculative-parallel-limit: 0
