@@ -23,3 +23,5 @@
 ## OTA 更新
 
 在设备启用设备管理后，可在家长设置里填写 HTTPS 更新清单并开启自动检查。运行 `python3 scripts/prepare_ota.py <apk> <输出目录>` 生成 `release.json` 和 APK。将两份文件放在同一 HTTPS 目录。当前客户端要求直接返回 HTTP 200。更新包须使用相同的应用签名及更高的 versionCode。
+
+[V5 的 GitHub 更新清单](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
