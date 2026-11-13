@@ -16,7 +16,7 @@ https://github.com/user-attachments/assets/b50a9013-09a9-40ed-bffd-b0f5892f4d65
 
 - **Child home screen** · Approved apps and websites, custom wallpapers, and media controls. Approved websites can open in the built-in browser.
 - **Parent controls** · A six-digit PIN, foreground usage reports, a local web dashboard, and a way to return to the original launcher. Screen viewing requires Android permission on the device.
-- **Manual updates** · With device management enabled, select Check and update in About. Updates require the same signing key and a higher version code.
+- **Updates** · With device management enabled, automatic updates are on by default and use unmetered networks. In About, clear the automatic updates checkbox or select Check and update at any time. Updates require the same signing key and a higher version code.
 
 The built-in learning browser ships with the APK. ChatGPT, music apps, Google Play services, and compatible firmware are provided separately by the user.
 

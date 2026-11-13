@@ -12,7 +12,7 @@ public final class OtaReceiver extends BroadcastReceiver {
             ota.result(intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1),
                     intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE));
         } else if (Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
-            ota.cancelLegacyAutomaticUpdates();
+            ota.scheduleAutomaticUpdates();
             if (!ota.replaced()) return;
             context.startActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
                     .setClassName(context, context.getPackageName() + ".ChildHome")

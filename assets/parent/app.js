@@ -388,7 +388,14 @@ if (localParent) {
     localParent.openAuthorSite();
   });
 }
+const updateAuto = byId('update-auto');
+let savingUpdateAuto = false;
+
 function showUpdate(state) {
+  if (!savingUpdateAuto) {
+    updateAuto.checked = state.automatic;
+    updateAuto.disabled = !state.available;
+  }
   byId('update-version').textContent = '当前版本 ' + state.version;
   byId('update-status').textContent = state.available ? state.message : '请先启用设备管理。';
   byId('update-check').disabled = !state.available;
@@ -397,6 +404,22 @@ async function refreshUpdate() {
   try { showUpdate(await json('/api/update')); }
   catch (error) { byId('update-status').textContent = error.message; }
 }
+updateAuto.addEventListener('change', async () => {
+  const automatic = updateAuto.checked;
+  savingUpdateAuto = true;
+  updateAuto.disabled = true;
+  try {
+    const state = await update('/api/update', {automatic});
+    savingUpdateAuto = false;
+    showUpdate(state);
+  } catch (error) {
+    updateAuto.checked = !automatic;
+    updateAuto.disabled = false;
+    byId('update-status').textContent = error.message;
+  } finally {
+    savingUpdateAuto = false;
+  }
+});
 byId('update-check').addEventListener('click', async () => {
   try { showUpdate(await update('/api/update', {check:true})); }
   catch (error) { byId('update-status').textContent = error.message; }

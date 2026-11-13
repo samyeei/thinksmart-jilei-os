@@ -33,7 +33,7 @@ import javax.net.ssl.HttpsURLConnection;
 final class OtaUpdate {
     static final String RESULT = "local.jile.v5.OTA_RESULT";
     private static final int MANUAL = 87660;
-    private static final int LEGACY_PERIODIC = 87661;
+    private static final int PERIODIC = 87661;
     private static final String FEED = "https://raw.githubusercontent.com/samyeei/thinksmart-jilei-os/refs/heads/ota/release.json";
     private static final long MAX_APK = 160L * 1024 * 1024;
     private static final Object LOCK = new Object();
@@ -57,6 +57,7 @@ final class OtaUpdate {
             return new JSONObject().put("version", current.versionName)
                     .put("versionCode", current.versionCode)
                     .put("available", new KioskPolicy(context).available())
+                    .put("automatic", automaticEnabled())
                     .put("message", prefs.getString("message", "尚未检查更新"));
         }
     }
@@ -64,10 +65,17 @@ final class OtaUpdate {
     void configure(JSONObject data) throws Exception {
         synchronized (LOCK) {
             if (!new KioskPolicy(context).available()) throw new IllegalArgumentException("设备未启用设备管理");
+            if (data.length() == 1 && data.opt("automatic") instanceof Boolean) {
+                if (!prefs.edit().putBoolean("automatic", data.getBoolean("automatic")).commit()) {
+                    throw new IOException("无法保存自动更新设置");
+                }
+                scheduleAutomaticUpdates();
+                return;
+            }
             reconcile(installed().versionCode);
             if (prefs.getInt("target", 0) != 0) throw new IllegalArgumentException("正在安装更新，请稍等");
             if (!data.optBoolean("check", false) || data.length() != 1) {
-                throw new IllegalArgumentException("仅支持手动检查更新");
+                throw new IllegalArgumentException("更新设置格式错误");
             }
             if (CHECKING.get() || jobs().getPendingJob(MANUAL) != null) return;
             JobInfo job = new JobInfo.Builder(MANUAL, component())
@@ -78,10 +86,20 @@ final class OtaUpdate {
         }
     }
 
-    void cancelLegacyAutomaticUpdates() {
+    private boolean automaticEnabled() {
+        return prefs.getBoolean("automatic", true);
+    }
+
+    void scheduleAutomaticUpdates() {
         synchronized (LOCK) {
-            jobs().cancel(LEGACY_PERIODIC);
-            prefs.edit().remove("url").remove("automatic").apply();
+            if (!automaticEnabled() || !new KioskPolicy(context).available()) {
+                jobs().cancel(PERIODIC);
+            } else if (jobs().getPendingJob(PERIODIC) == null) {
+                jobs().schedule(new JobInfo.Builder(PERIODIC, component())
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                        .setPeriodic(TimeUnit.HOURS.toMillis(6))
+                        .setPersisted(true).build());
+            }
         }
     }
 
@@ -89,11 +107,12 @@ final class OtaUpdate {
     private ComponentName component() { return new ComponentName(context, OtaJob.class); }
 
     boolean check(int jobId) {
-        if (jobId != MANUAL) return true;
+        if (jobId != MANUAL && jobId != PERIODIC) return true;
+        boolean automatic = jobId == PERIODIC;
         if (!CHECKING.compareAndSet(false, true)) return false;
         try {
             synchronized (LOCK) {
-                if (!new KioskPolicy(context).available()) return true;
+                if ((automatic && !automaticEnabled()) || !new KioskPolicy(context).available()) return true;
                 reconcile(installed().versionCode);
                 if (prefs.getInt("target", 0) != 0) return true;
                 message("正在检查更新");
@@ -130,7 +149,7 @@ final class OtaUpdate {
                     throw new IllegalArgumentException("APK 的应用名称、版本或签名不匹配，已取消更新");
                 }
                 synchronized (LOCK) {
-                    if (Thread.currentThread().isInterrupted()
+                    if (Thread.currentThread().isInterrupted() || (automatic && !automaticEnabled())
                             || !new KioskPolicy(context).available() || version <= installed().versionCode) return true;
                     install(file, version);
                 }
