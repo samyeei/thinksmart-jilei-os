@@ -23,7 +23,7 @@ final class LocalParentPanel extends WebView {
             + "img-src 'self' blob: data:; base-uri 'none'; form-action 'none'; frame-src 'none'";
     private volatile boolean active = true;
 
-    LocalParentPanel(Context context, String panel, Runnable leaveParent) {
+    LocalParentPanel(Context context, String panel, Runnable leaveParent, Runnable openAuthorSite) {
         super(context);
         getSettings().setJavaScriptEnabled(true);
         getSettings().setAllowFileAccess(false);
@@ -34,6 +34,11 @@ final class LocalParentPanel extends WebView {
         addJavascriptInterface(new Bridge(leaveParent), "V5LocalParent");
         setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (active && request.isForMainFrame() && request.hasGesture()
+                        && "about".equals(panel)
+                        && "https://lab.samyeei.com/".equals(request.getUrl().toString())) {
+                    openAuthorSite.run();
+                }
                 return true;
             }
             @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {

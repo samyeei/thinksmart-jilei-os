@@ -28,6 +28,7 @@ function showPanel() {
   byId('page-title').textContent = selected.textContent;
   document.querySelector('.admin-content').scrollTop = 0;
   window.scrollTo(0, 0);
+  if (selected.hash === '#about') refreshUpdate();
 }
 for (const link of navigation) {
   link.addEventListener('click', event => {
@@ -39,7 +40,6 @@ for (const link of navigation) {
 }
 window.addEventListener('hashchange', showPanel);
 window.addEventListener('popstate', showPanel);
-showPanel();
 
 async function request(path, options) {
   const result = await fetch(path, options);
@@ -396,8 +396,9 @@ byId('update-check').addEventListener('click', async () => {
   catch (error) { byId('update-status').textContent = error.message; }
 });
 setInterval(() => {
-  if (panelHash() === '#settings' && !document.hidden) refreshUpdate();
+  if (panelHash() === '#about' && !document.hidden) refreshUpdate();
 }, 5000);
+showPanel();
 (async () => {
   try {
     if (localParent) {
@@ -411,7 +412,6 @@ setInterval(() => {
         catch (error) { byId('desktop-status').textContent = error.message; }
       }
       if (panel === '#usage') await refreshUsage();
-      if (panel === '#settings') await refreshUpdate();
       return;
     }
     await refreshStatus();
@@ -419,7 +419,6 @@ setInterval(() => {
       json('/api/apps').then(showApps).catch(error => { byId('apps-status').textContent = error.message; }),
       json('/api/sites').then(showSites).catch(error => { byId('site-status').textContent = error.message; }),
       json('/api/desktop').then(showDesktop).catch(error => { byId('desktop-status').textContent = error.message; }),
-      refreshUpdate(),
       refreshUsage()
     ]);
   } catch (error) { byId('status').textContent = error.message; }

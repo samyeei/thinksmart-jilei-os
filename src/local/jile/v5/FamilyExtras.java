@@ -22,7 +22,6 @@ final class FamilyExtras {
     static final String SITES = "allowed_sites", GREETING = "desktop_greeting";
     static final String APPEARANCE = "desktop_appearance";
     private static final String JPEG_PREFIX = "data:image/jpeg;base64,";
-    static final String ABOUT = "鸡肋OS把旧设备变成学习桌面。家长可审批应用和网址、查看使用记录，并通过家庭 Wi-Fi 管理设备。";
     static final String AUTHOR = "https://lab.samyeei.com/";
     private final Context context;
     private final SharedPreferences prefs;

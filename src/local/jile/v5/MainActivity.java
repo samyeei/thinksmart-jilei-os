@@ -619,6 +619,7 @@ public final class MainActivity extends Activity {
             case USAGE: showLocalParentPanel("usage"); return;
             case DESKTOP: showLocalParentPanel("desktop"); return;
             case SETTINGS: showLocalParentPanel("settings"); return;
+            case ABOUT: showLocalParentPanel("about"); return;
             default: break;
         }
         add(text(section.label, 26, PARENT_INK), 0);
@@ -635,16 +636,6 @@ public final class MainActivity extends Activity {
         switch (section) {
             case APPS: showAppApproval(); break;
             case REMOTE: showRemoteManagement(); break;
-            case ABOUT:
-                ImageView logo = new ImageView(this);
-                logo.setImageResource(R.drawable.ic_brand);
-                logo.setLayoutParams(new LinearLayout.LayoutParams(dp(64), dp(64)));
-                root.addView(logo);
-                add(text("让闲置设备，重新有用。", 20, PARENT_INK), 10);
-                add(text(FamilyExtras.ABOUT, 15, PARENT_MUTED), 10);
-                add(button("Samyeei AI Lab · 打开网站", this::openAuthorSite), 10);
-                add(text("© Samyeei · 禁止商用", 14, PARENT_MUTED), 10);
-                break;
             default: break;
         }
     }
@@ -760,7 +751,7 @@ public final class MainActivity extends Activity {
                 toast("PIN 已修改，请重新登录");
                 showChild();
             }
-        });
+        }, this::openAuthorSite);
         localParentPanel = panel;
         panel.setWebChromeClient(new android.webkit.WebChromeClient() {
             @Override public boolean onShowFileChooser(android.webkit.WebView view,
