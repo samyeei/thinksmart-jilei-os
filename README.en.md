@@ -1,19 +1,43 @@
 # ThinkSmart View · Jile OS V5
 
-[简体中文](README.md)
+[简体中文](README.md) · [日本語](README.ja.md) · [English](README.en.md)
 
-Jile OS V5 is a learning launcher for compatible Android 8.1 firmware (API 27, ARMv7). Parents can approve apps and websites, view foreground usage, and customize the home screen. The on-device parent panel shows the local management address.
+Turn an idle Lenovo ThinkSmart View into a learning and music station. Children launch the apps and websites you approve. Parents manage access on the device or over the home network.
 
-Set `JAVA_HOME` to JDK 17 and `ANDROID_HOME` to the SDK directory. Install Gradle 9.8.2, Android SDK 37.2 and Build Tools 36.0.0. Run `python3 build.py` to produce `dist/jile-os-v5.apk` using a local test key. Set `JILE_GRADLE` if Gradle is outside PATH.
+## Hands-on demo
 
-Verify the device and recovery materials before using `adb -s <serial> install -t dist/jile-os-v5.apk`. Use `-r` for updates signed with the same key. On first setup, enter the setup code `123456` on the device and create your own six-digit parent PIN. Enable the accessibility service for the in-app Home button, notification access for media controls, and usage access for foreground reports. Check the device management and recovery path before enabling Android Lock Task.
+<img src="docs/media/desktop.jpg" alt="Child home screen" width="200"> <img src="docs/media/voice.jpg" alt="ChatGPT voice" width="200"> <img src="docs/media/parent.jpg" alt="Parent dashboard" width="200">
 
-The parent web interface uses HTTP on a trusted home network. Screen capture requires the user's awareness and system authorization. The user supplies compatible firmware, Google Play services, and other apps. The package excludes private device data, third-party APKs, the third-party learning graph, and the legacy website compatibility bundle.
+[Watch the full demo (1:39)](https://x.com/SamyeeiYu/status/2120146457353454033)
 
-Copyright © 2026 Samyeei. Project source is available under the [PolyForm Noncommercial 1.0.0](LICENSE) license for permitted noncommercial uses. Third-party dependencies retain their own licenses.
+## Features
 
-## OTA updates
+- **Child home screen** · Approved apps and websites, custom wallpapers, and media controls. Approved websites can open in the built-in browser.
+- **Parent controls** · A six-digit PIN, foreground usage reports, a local web dashboard, and a way to return to the original launcher. Screen viewing requires Android permission on the device.
+- **Manual updates** · With device management enabled, select Check and update in About. Updates require the same signing key and a higher version code.
 
-With device management enabled, choose Check and update in About on the device or in the web dashboard. The app checks the built-in GitHub feed only when requested by a parent. Run `python3 scripts/prepare_ota.py <apk> <output-directory>` and host the manifest and APK in the same HTTPS directory. The current client requires direct HTTP 200 responses. Updates require the same signing key and a higher versionCode.
+The built-in learning browser ships with the APK. ChatGPT, music apps, Google Play services, and compatible firmware are provided separately by the user.
 
-[V5 GitHub update manifest](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
+## Quick start
+
+[GitHub Releases](https://github.com/samyeei/thinksmart-view-jile-os-v5/releases/latest)
+
+1. Use a Lenovo ThinkSmart View V5 with compatible Android 8.1 firmware (API 27, ARMv7). Keep recovery materials, enable USB debugging, and confirm the target with `adb devices -l`.
+2. Download `jile-os-v5.apk` from GitHub Releases. Run `adb -s <serial> install -t jile-os-v5.apk`. Add `-r` for updates signed with the same key.
+3. Enter the initial setup code `123456` on the device and choose a new six-digit parent PIN. Set the default launcher and approve apps and sites. Enable accessibility for the in-app Home button, notification access for media controls, and usage access for reports as needed. Check the recovery path before enabling device management and Lock Task.
+4. Find the parent dashboard address in Remote Management on the device. The dashboard uses HTTP on a trusted home network.
+
+## Copy and paste into your AI agent
+
+> Follow this repository to install Jile OS V5 on my USB-connected ThinkSmart View. Verify the model, firmware, ABI, ADB serial, and any existing signing certificate, then download and install the GitHub Release APK on the matching device while keeping existing data. Stop and explain if compatibility or signing is unclear or if flashing or wiping is required. Ask me to enter setup code 123456 and choose my own parent PIN on the device. https://github.com/samyeei/thinksmart-view-jile-os-v5
+
+## Build from source
+
+Install JDK 17, Gradle 9.8.2, Android SDK 37.2, and Build Tools 36.0.0. Set `JAVA_HOME` and `ANDROID_HOME` and run `python3 build.py`. The output is `dist/jile-os-v5.apk` signed with the local test key. Set `JILE_GRADLE` if Gradle is outside PATH.
+
+
+`python3 scripts/prepare_ota.py <apk> <output-directory>` → `release.json` + APK. [OTA](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
+
+## License
+
+© 2026 Samyeei. Source is available under PolyForm Noncommercial 1.0.0 for permitted noncommercial uses. [LICENSE](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md)

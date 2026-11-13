@@ -1,27 +1,43 @@
 # ThinkSmart View · 鸡肋OS V5
 
-[English](README.en.md)
+[简体中文](README.md) · [日本語](README.ja.md) · [English](README.en.md)
 
-鸡肋OS V5 是运行在兼容 Android 8.1（API 27、ARMv7）固件上的学习桌面。家长可以管理应用与网址白名单、查看前台用量和设置桌面。设备连接家庭 Wi-Fi 后，在本机家长端可查看局域网管理地址。
+把闲置的 Lenovo ThinkSmart View 变成孩子的学习和音乐桌面。孩子从桌面进入家长开放的应用和网站，家长可在设备上或家庭 Wi-Fi 内管理。
 
-## 构建
+## 实机演示
 
-准备 JDK 17、Gradle 9.8.2、Android SDK 37.2 与 Build Tools 36.0.0。设置 `JAVA_HOME` 和 `ANDROID_HOME`，然后运行 `python3 build.py`。可用 `JILE_GRADLE` 指定 Gradle 可执行文件。输出为 `dist/jile-os-v5.apk`，本地测试签名由构建机生成。
+<img src="docs/media/desktop.jpg" alt="儿童桌面" width="200"> <img src="docs/media/voice.jpg" alt="ChatGPT 语音" width="200"> <img src="docs/media/parent.jpg" alt="家长端" width="200">
 
-## 安装与恢复
+[观看完整视频（1 分 39 秒）](https://x.com/SamyeeiYu/status/2120146457353454033)
 
-1. 先确认设备固件、Android 版本及 ABI，保存原系统恢复材料。打开 USB 调试后使用 `adb devices -l` 核对目标。
-2. 在已兼容的 Android 系统上运行 `adb -s <目标序列号> install -t dist/jile-os-v5.apk`。若已有同签名版本，加 `-r` 覆盖升级。签名不同的设备应先确定备份和迁移方式。
-3. 首次在设备上输入初始设置码 `123456`，再创建自己的六位家长 PIN，按需选择默认桌面和应用、网址。应用内 Home 键依赖鸡肋OS的无障碍服务，桌面媒体按钮依赖通知访问权限，前台用量统计依赖使用情况访问权限。
-4. 需要 Android Lock Task 时，先确认当前设备管理状态及退出路径。家长可以从本机家长端返回原系统桌面。在解除设备管理之后，可在 Android 的默认应用设置中选回原桌面。
-5. 家长网页使用 HTTP，适用于可信家庭网络。屏幕查看应先取得使用者同意，通过设备上的系统授权开启。重启后能否保留授权取决于固件。
+## 主要功能
 
-包内提供桌面源码和构建材料。兼容固件、Google Play 服务及其他应用由使用者自行准备。个人资料、实际设备配置、第三方应用 APK 和第三方学习图谱均排除在发布范围外。本站的旧 WebView 兼容脚本也未纳入源码包，站点渲染取决于设备 WebView。
+- **儿童桌面** · 应用与网址审批、自选壁纸、媒体播放控制。开放网站可在内置浏览器中打开。
+- **家长管理** · 六位 PIN、前台使用记录、局域网网页管理，以及从设备端切回原桌面。经设备系统授权后可查看屏幕。
+- **手动更新** · 启用设备管理后，在「产品说明」点击「检查并更新」。更新包须同签名，且版本号更高。
 
-© 2026 Samyeei。项目源码按 [PolyForm Noncommercial 1.0.0](LICENSE) 公开，限该许可规定的非商业用途。第三方依赖适用各自的许可证。
+演示中的 ChatGPT、音乐 App、Google Play 服务和兼容固件需自行准备。安装包内置学习浏览器。
 
-## OTA 更新
+## 快速安装
 
-在设备启用设备管理后，家长可在本机或网页端的「产品说明」点击「检查并更新」。客户端内置 GitHub 更新地址，只在家长主动操作时检查和安装。运行 `python3 scripts/prepare_ota.py <apk> <输出目录>` 生成 `release.json` 和 APK。将两份文件放在同一 HTTPS 目录。当前客户端要求直接返回 HTTP 200。更新包须使用相同的应用签名及更高的 versionCode。
+[GitHub Releases](https://github.com/samyeei/thinksmart-view-jile-os-v5/releases/latest)
 
-[V5 的 GitHub 更新清单](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
+1. 准备运行兼容 Android 8.1（API 27、ARMv7）固件的 Lenovo ThinkSmart View V5，保留恢复资料。开启 USB 调试，用 `adb devices -l` 核对目标设备。
+2. 从 GitHub Releases 下载 `jile-os-v5.apk`，运行 `adb -s <序列号> install -t jile-os-v5.apk`。同签名覆盖升级时加 `-r`。
+3. 在设备上输入初始设置码 `123456`，再自行设置六位家长 PIN。随后选择默认桌面并审批应用和网址。按需开启无障碍服务（应用内 Home 键）、通知访问（媒体控制）和使用情况访问（统计）。启用设备管理和 Lock Task 前确认恢复路径。
+4. 家长网页地址在设备端的「远程管理」查看。网页使用 HTTP，适用于可信家庭局域网。
+
+## 复制给 AI
+
+> 请按这个仓库的说明把鸡肋OS V5 安装到我通过 USB 接入的 ThinkSmart View：先核对机型、固件、ABI、ADB 序列号及现有签名，再下载 GitHub Release APK 并安装到明确匹配的设备，保留原有数据；遇到机型不明、签名不符或需要刷机、清数据时停下说明，最后提示我在设备上用初始码 123456 设置自己的家长 PIN。 https://github.com/samyeei/thinksmart-view-jile-os-v5
+
+## 自行构建
+
+准备 JDK 17、Gradle 9.8.2、Android SDK 37.2 和 Build Tools 36.0.0，设置 `JAVA_HOME` 与 `ANDROID_HOME`，运行 `python3 build.py`。产物位于 `dist/jile-os-v5.apk`，使用本地构建机的测试签名。可用 `JILE_GRADLE` 指定 Gradle 路径。
+
+
+`python3 scripts/prepare_ota.py <apk> <output-directory>` → `release.json` + APK. [OTA](https://raw.githubusercontent.com/samyeei/thinksmart-view-jile-os-v5/refs/heads/ota/release.json)
+
+## 许可
+
+© 2026 Samyeei. 源码按 PolyForm Noncommercial 1.0.0 公开，限许可允许的非商业用途。 [LICENSE](LICENSE) · [Third-party notices](THIRD_PARTY_NOTICES.md)
